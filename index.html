@@ -5,7 +5,7 @@
   <title>動的いいねボタン</title>
 <style>
   .like-button {
-    font-size: 20px;
+    font-size: 30px;
     background-color: transparent;
     color: #ccc;
     border: 2px solid #ccc;        /* ← 枠を追加 */
@@ -27,8 +27,8 @@
 
   .like-count {
     display: block;
-    margin-top: 8px;
-    font-size: 18px;
+    margin-top: 5px;
+    font-size: 10px;
     color: #333;
   }
 </style>
@@ -48,7 +48,7 @@
           const button = document.createElement('button');
           button.className = 'like-btn';
           button.dataset.id = id;
-          button.innerText = `👍🏼 Good!`;
+          button.innerText = ` 👍🏼  Good!`;
 
           const count = document.createElement('p');
           count.id = `count-${id}`;
