@@ -5,14 +5,15 @@
   <title>動的いいねボタン</title>
 <style>
   .like-button {
-    font-size: 30px;
+    font-size: 40px;  /* ボタンを一回り大きく */
     background-color: transparent;
     color: #ccc;
-    border: 2px solid #ccc;        /* ← 枠を追加 */
-    border-radius: 8px;            /* ← 角を少し丸める（不要なら削除OK） */
-    padding: 8px 16px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 12px 24px;  /* パディング調整 */
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-right: 10px;  /* ボタンとカウントの間隔 */
   }
 
   .like-button:hover {
@@ -26,10 +27,21 @@
   }
 
   .like-count {
-    display: block;
-    margin-top: 5px;
-    font-size: 10px;
+    display: none;  /* 初期状態で非表示 */
+    font-size: 14px;
     color: #333;
+    margin-top: 12px; /* カウントとボタンの位置調整 */
+  }
+
+  .like-count.visible {
+    display: block; /* ボタンクリックで表示 */
+  }
+
+  /* 横並びにするためのスタイル */
+  .like-container {
+    display: flex;
+    align-items: center;  /* ボタンとカウントを縦中央に合わせる */
+    margin-bottom: 20px;
   }
 </style>
 </head>
@@ -46,22 +58,29 @@
       .then(data => {
         for (const id in data) {
           const button = document.createElement('button');
-          button.className = 'like-btn';
+          button.className = 'like-button';
           button.dataset.id = id;
-          button.innerText = ` 👍🏼  Good!`;
+          button.innerText = ` 👍🏼 Good!`;
 
           const count = document.createElement('p');
           count.id = `count-${id}`;
+          count.className = 'like-count';
           count.innerText = `good: ${data[id]}`;
 
-          container.appendChild(button);
-          container.appendChild(count);
+          const likeContainer = document.createElement('div');
+          likeContainer.className = 'like-container';
+          likeContainer.appendChild(button);
+          likeContainer.appendChild(count);
+
+          container.appendChild(likeContainer);
 
           button.addEventListener('click', () => {
+            button.classList.add('liked');
             fetch(`${baseUrl}?id=${id}`, { method: 'POST' })
               .then(res => res.json())
               .then(updated => {
                 count.textContent = `good: ${updated.count}`;
+                count.classList.add('visible'); // ← 初回クリックで表示
               });
           });
         }
