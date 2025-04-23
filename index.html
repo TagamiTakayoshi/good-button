@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>動的いいねボタン</title>
+  <style>
+    .like-btn {
+      font-size: 15px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="like-container">読み込み中...</div>
+
+  <script>
+    const baseUrl = 'https://script.google.com/macros/s/AKfycbwL_3gxmoT4P056qSwi2TBhFAd00bxPgqis53T8p1w3bZXi-RhMeXadgz3y_rFevwaG0g/exec';
+    const container = document.getElementById('like-container');
+    container.innerHTML = ''; // ローディングメッセージ消す
+
+    fetch(`${baseUrl}?all=true`)
+      .then(res => res.json())
+      .then(data => {
+        for (const id in data) {
+          const button = document.createElement('button');
+          button.className = 'like-btn';
+          button.dataset.id = id;
+          button.innerText = `👍🏼Good!`;
+
+          const count = document.createElement('p');
+          count.id = `count-${id}`;
+          count.innerText = `いいね数: ${data[id]}`;
+
+          container.appendChild(button);
+          container.appendChild(count);
+
+          button.addEventListener('click', () => {
+            fetch(`${baseUrl}?id=${id}`, { method: 'POST' })
+              .then(res => res.json())
+              .then(updated => {
+                count.textContent = `いいね数: ${updated.count}`;
+              });
+          });
+        }
+      })
+      .catch(err => {
+        container.innerHTML = '読み込み失敗しました😢';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
