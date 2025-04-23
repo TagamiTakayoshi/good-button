@@ -5,11 +5,11 @@
   <title>動的いいねボタン</title>
   <style>
     .like-btn {
-      font-size: 15px;
+      font-size: 20px;
       background: none;
       border: none;
       cursor: pointer;
-      margin: 10px;
+      margin: 5px;
     }
   </style>
 </head>
@@ -28,11 +28,11 @@
           const button = document.createElement('button');
           button.className = 'like-btn';
           button.dataset.id = id;
-          button.innerText = `👍🏼Good!`;
+          button.innerText = `👍🏼 Good!`;
 
           const count = document.createElement('p');
           count.id = `count-${id}`;
-          count.innerText = `いいね数: ${data[id]}`;
+          count.innerText = `👍🏼: ${data[id]}`;
 
           container.appendChild(button);
           container.appendChild(count);
