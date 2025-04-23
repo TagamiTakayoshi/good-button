@@ -6,8 +6,10 @@
   <style>
     .like-btn {
       font-size: 20px;
-      background: none;
-      border: none;
+  　  background-color: transparent;
+　    color: #ccc;
+　    border: 2px solid #ccc;        /* ← 枠を追加 */
+　    border-radius: 8px;            /* ← 角を少し丸める（不要なら削除OK） */
       cursor: pointer;
       margin: 5px;
     }
@@ -32,7 +34,7 @@
 
           const count = document.createElement('p');
           count.id = `count-${id}`;
-          count.innerText = `👍🏼: ${data[id]}`;
+          count.innerText = `good: ${data[id]}`;
 
           container.appendChild(button);
           container.appendChild(count);
@@ -41,7 +43,7 @@
             fetch(`${baseUrl}?id=${id}`, { method: 'POST' })
               .then(res => res.json())
               .then(updated => {
-                count.textContent = `いいね数: ${updated.count}`;
+                count.textContent = `good: ${updated.count}`;
               });
           });
         }
