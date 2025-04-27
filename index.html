@@ -50,9 +50,9 @@ function fetchLikes() {
     .catch(error => console.error("Error fetching likes:", error));
 }
 
-// いいねボタンクリックで+1
+// いいねボタンクリックで+1（POSTリクエスト）
 document.getElementById('likeButton').addEventListener('click', () => {
-  fetch(`${endpoint}?id=${buttonId}`)  // POSTではなくGETを使用
+  fetch(`${endpoint}?id=${buttonId}`, { method: 'POST' })  // POSTリクエストに変更
     .then(response => response.json())
     .then(data => {
       document.getElementById('likeCount').textContent = data.likes;
