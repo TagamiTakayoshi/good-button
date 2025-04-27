@@ -32,15 +32,13 @@
 <button id="likeButton">👍🏼 Good!</button><span id="likeCount">0</span>
 
 <script>
-const buttonId = new URLSearchParams(window.location.search).get('id'); // URLパラメータからID取得
-const endpoint = 'https://script.google.com/macros/s/AKfycbwueH2tOMLu3h9E4oDnMuzBIMAAsUUOzpAd7WFyFN-ZlVQEY31756WgrV4NEvpoWvRxcg/exec';
+// Google Apps Script のエンドポイントURLを指定
+const endpoint = 'https://script.google.com/macros/s/AKfycbxgERVug6G1xYanCG7Lt29e9ztjOsYiyCGAaxe9fHYRvMv06Y2z3FVLtjSrmJqXPYJfMw/exec';  // 先ほどコピーしたURLに置き換えてください
 
-// `buttonId`が存在しない場合、エラーを表示
-if (!buttonId) {
-  alert("IDが見つかりません。URLのパラメータを確認してください。");
-}
+// 固有のbuttonIdを生成（ページごとに一意）
+const buttonId = Math.random().toString(36).substring(2, 15); // ランダムなIDを生成
 
-// 現在のいいね数を取得
+// 現在の「いいね数」を取得
 function fetchLikes() {
   fetch(`${endpoint}?id=${buttonId}`)
     .then(response => response.json())
@@ -50,9 +48,9 @@ function fetchLikes() {
     .catch(error => console.error("Error fetching likes:", error));
 }
 
-// いいねボタンクリックで+1（POSTリクエスト）
+// いいねボタンクリックで+1
 document.getElementById('likeButton').addEventListener('click', () => {
-  fetch(`${endpoint}?id=${buttonId}`, { method: 'POST' })  // POSTリクエストに変更
+  fetch(`${endpoint}?id=${buttonId}`, { method: 'POST' })
     .then(response => response.json())
     .then(data => {
       document.getElementById('likeCount').textContent = data.likes;
