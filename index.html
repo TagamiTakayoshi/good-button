@@ -14,12 +14,10 @@
       cursor: pointer;
       transition: background-color 0.3s, transform 0.3s;
     }
-
     #likeButton:hover {
       background-color: #005f7a;
       transform: scale(1.05);
     }
-
     #likeCount {
       margin-left: 12px;
       font-size: 20px;
@@ -29,39 +27,41 @@
 </head>
 <body>
 
-<!-- ボタンに一意のIDを設定 -->
-<button id="likeButton1">👍🏼 Good 1</button><span id="likeCount1">0</span>
-<button id="likeButton2">👍🏼 Good 2</button><span id="likeCount2">0</span>
+<button id="likeButton">👍🏼 Good!</button><span id="likeCount">0</span>
 
 <script>
-  // 各ボタンに一意のIDを設定
-  const endpoint = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+  // https://script.google.com/macros/s/AKfycbxCztyIAdLfCDpCF6RYsY5A3Rex2BSxQfl_uiRRtdqj9FyfjfR6CvKgmj4lk6aDMQc/exec（末尾に「/exec」がついてるやつ）
+  const endpoint = 'あなたのGASウェブアプリURL';
 
-  // ボタン1の処理
-  document.getElementById('likeButton1').addEventListener('click', function() {
-    const buttonId = 'button1'; // 固定ID
-    fetchAndUpdateLikeCount(buttonId, 'likeCount1');
-  });
+  // URLパラメータからボタンのIDを取得
+  const buttonId = new URLSearchParams(window.location.search).get('id');
 
-  // ボタン2の処理
-  document.getElementById('likeButton2').addEventListener('click', function() {
-    const buttonId = 'button2'; // 固定ID
-    fetchAndUpdateLikeCount(buttonId, 'likeCount2');
-  });
+  if (!buttonId) {
+    alert("IDが見つかりません。URLに?id=xxxを付けてください。");
+  }
 
-  // いいね数を取得し、表示を更新する関数
-  function fetchAndUpdateLikeCount(buttonId, likeCountElementId) {
+  // 現在のいいね数を取得して表示
+  function fetchLikes() {
     fetch(`${endpoint}?id=${buttonId}`)
       .then(response => response.json())
       .then(data => {
-        document.getElementById(likeCountElementId).textContent = data.likes;
+        document.getElementById('likeCount').textContent = data.likes;
       })
-      .catch(error => console.error("Error fetching likes:", error));
+      .catch(error => console.error('読み込みエラー:', error));
   }
 
-  // 初期読み込み（ボタン1とボタン2のいいね数を取得）
-  fetchAndUpdateLikeCount('button1', 'likeCount1');
-  fetchAndUpdateLikeCount('button2', 'likeCount2');
+  // ボタンを押したら+1して更新
+  document.getElementById('likeButton').addEventListener('click', () => {
+    fetch(`${endpoint}?id=${buttonId}`, { method: 'POST' })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('likeCount').textContent = data.likes;
+      })
+      .catch(error => console.error('更新エラー:', error));
+  });
+
+  // ページ読み込み時に初期化
+  fetchLikes();
 </script>
 
 </body>
