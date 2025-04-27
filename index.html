@@ -54,21 +54,19 @@
       .catch(error => console.error('読み込みエラー:', error));
   }
 
-  // いいねボタンクリックで+1
-  document.getElementById('likeButton').addEventListener('click', () => {
-    fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',  // ここが重要！
-      },
-      body: JSON.stringify({ id: buttonId }) // POSTはbodyにidを送る
-    })
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById('likeCount').textContent = data.likes;
-    })
-    .catch(error => console.error('更新エラー:', error));
-  });
+// いいねボタンクリックで+1
+document.getElementById('likeButton').addEventListener('click', () => {
+  fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: buttonId })
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('likeCount').textContent = data.likes;
+  })
+  .catch(error => console.error('更新エラー:', error));
+});
 </script>
 
 </body>
