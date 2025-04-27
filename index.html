@@ -14,10 +14,12 @@
       cursor: pointer;
       transition: background-color 0.3s, transform 0.3s;
     }
+
     #likeButton:hover {
       background-color: #005f7a;
       transform: scale(1.05);
     }
+
     #likeCount {
       margin-left: 12px;
       font-size: 20px;
@@ -30,17 +32,17 @@
 <button id="likeButton">👍🏼 Good!</button><span id="likeCount">0</span>
 
 <script>
-  // https://script.google.com/macros/s/AKfycbxCztyIAdLfCDpCF6RYsY5A3Rex2BSxQfl_uiRRtdqj9FyfjfR6CvKgmj4lk6aDMQc/exec（末尾に「/exec」がついてるやつ）
+  // あなたのGASウェブアプリURLをここに！
   const endpoint = 'あなたのGASウェブアプリURL';
 
-  // URLパラメータからボタンのIDを取得
+  // URLパラメータからボタンのID取得
   const buttonId = new URLSearchParams(window.location.search).get('id');
 
   if (!buttonId) {
     alert("IDが見つかりません。URLに?id=xxxを付けてください。");
   }
 
-  // 現在のいいね数を取得して表示
+  // 現在のいいね数を取得
   function fetchLikes() {
     fetch(`${endpoint}?id=${buttonId}`)
       .then(response => response.json())
@@ -50,7 +52,7 @@
       .catch(error => console.error('読み込みエラー:', error));
   }
 
-  // ボタンを押したら+1して更新
+  // いいねボタンクリックで+1
   document.getElementById('likeButton').addEventListener('click', () => {
     fetch(`${endpoint}?id=${buttonId}`, { method: 'POST' })
       .then(response => response.json())
@@ -60,7 +62,7 @@
       .catch(error => console.error('更新エラー:', error));
   });
 
-  // ページ読み込み時に初期化
+  // 初期読み込み
   fetchLikes();
 </script>
 
