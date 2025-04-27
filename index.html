@@ -46,49 +46,34 @@
 </style>
 </head>
 <body>
-  <div id="like-container">読み込み中...</div>
 
-  <script>
-    const baseUrl = 'https://script.google.com/macros/s/AKfycbwL_3gxmoT4P056qSwi2TBhFAd00bxPgqis53T8p1w3bZXi-RhMeXadgz3y_rFevwaG0g/exec';
-    const container = document.getElementById('like-container');
-    container.innerHTML = ''; // ローディングメッセージ消す
+<button id="likeButton">いいね！</button><span id="likeCount">0</span>
 
-    fetch(`${baseUrl}?all=true`)
-      .then(res => res.json())
-      .then(data => {
-        for (const id in data) {
-          const button = document.createElement('button');
-          button.className = 'like-button';
-          button.dataset.id = id;
-          button.innerText = ` 👍🏼 Good!`;
+<script>
+const buttonId = new URLSearchParams(window.location.search).get('id'); // URLパラメータからID取得
+const endpoint = 'https://script.google.com/macros/s/AKfycbwueH2tOMLu3h9E4oDnMuzBIMAAsUUOzpAd7WFyFN-ZlVQEY31756WgrV4NEvpoWvRxcg/exec';
 
-          const count = document.createElement('p');
-          count.id = `count-${id}`;
-          count.className = 'like-count';
-          count.innerText = `good: ${data[id]}`;
+// 現在のいいね数を取得
+function fetchLikes() {
+  fetch(`${endpoint}?id=${buttonId}`)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('likeCount').textContent = data.likes;
+    });
+}
 
-          const likeContainer = document.createElement('div');
-          likeContainer.className = 'like-container';
-          likeContainer.appendChild(button);
-          likeContainer.appendChild(count);
+// いいねボタンクリックで+1
+document.getElementById('likeButton').addEventListener('click', () => {
+  fetch(endpoint + `?id=${buttonId}`, { method: 'POST' })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('likeCount').textContent = data.likes;
+    });
+});
 
-          container.appendChild(likeContainer);
+// 初期読み込み
+fetchLikes();
+</script>
 
-          button.addEventListener('click', () => {
-            button.classList.add('liked');
-            fetch(`${baseUrl}?id=${id}`, { method: 'POST' })
-              .then(res => res.json())
-              .then(updated => {
-                count.textContent = `good: ${updated.count}`;
-                count.classList.add('visible'); // ← 初回クリックで表示
-              });
-          });
-        }
-      })
-      .catch(err => {
-        container.innerHTML = '読み込み失敗しました😢';
-        console.error(err);
-      });
-  </script>
 </body>
 </html>
