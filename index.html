@@ -32,17 +32,19 @@
 <button id="likeButton">👍🏼 Good!</button><span id="likeCount">0</span>
 
 <script>
-  // あなたのGASウェブアプリURLをここに！
-  const endpoint = 'あなたのGASウェブアプリURL';
+  // あなたのGASウェブアプリURLをここに！最後に / をつけない！
+  const endpoint = 'https://script.google.com/macros/s/AKfycbxCztyIAdLfCDpCF6RYsY5A3Rex2BSxQfl_uiRRtdqj9FyfjfR6CvKgmj4lk6aDMQc/exec';
 
   // URLパラメータからボタンのID取得
   const buttonId = new URLSearchParams(window.location.search).get('id');
 
   if (!buttonId) {
     alert("IDが見つかりません。URLに?id=xxxを付けてください。");
+  } else {
+    // 現在のいいね数を取得
+    fetchLikes();
   }
 
-  // 現在のいいね数を取得
   function fetchLikes() {
     fetch(`${endpoint}?id=${buttonId}`)
       .then(response => response.json())
@@ -54,16 +56,19 @@
 
   // いいねボタンクリックで+1
   document.getElementById('likeButton').addEventListener('click', () => {
-    fetch(`${endpoint}?id=${buttonId}`, { method: 'POST' })
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('likeCount').textContent = data.likes;
-      })
-      .catch(error => console.error('更新エラー:', error));
+    fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',  // ここが重要！
+      },
+      body: JSON.stringify({ id: buttonId }) // POSTはbodyにidを送る
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('likeCount').textContent = data.likes;
+    })
+    .catch(error => console.error('更新エラー:', error));
   });
-
-  // 初期読み込み
-  fetchLikes();
 </script>
 
 </body>
