@@ -35,22 +35,29 @@
 const buttonId = new URLSearchParams(window.location.search).get('id'); // URLパラメータからID取得
 const endpoint = 'https://script.google.com/macros/s/AKfycbwueH2tOMLu3h9E4oDnMuzBIMAAsUUOzpAd7WFyFN-ZlVQEY31756WgrV4NEvpoWvRxcg/exec';
 
+// `buttonId`が存在しない場合、エラーを表示
+if (!buttonId) {
+  alert("IDが見つかりません。URLのパラメータを確認してください。");
+}
+
 // 現在のいいね数を取得
 function fetchLikes() {
   fetch(`${endpoint}?id=${buttonId}`)
     .then(response => response.json())
     .then(data => {
       document.getElementById('likeCount').textContent = data.likes;
-    });
+    })
+    .catch(error => console.error("Error fetching likes:", error));
 }
 
 // いいねボタンクリックで+1
 document.getElementById('likeButton').addEventListener('click', () => {
-  fetch(endpoint + `?id=${buttonId}`, { method: 'POST' })
+  fetch(`${endpoint}?id=${buttonId}`)  // POSTではなくGETを使用
     .then(response => response.json())
     .then(data => {
       document.getElementById('likeCount').textContent = data.likes;
-    });
+    })
+    .catch(error => console.error("Error posting like:", error));
 });
 
 // 初期読み込み
