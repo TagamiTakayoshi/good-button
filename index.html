@@ -3,15 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <title>いいねボタン</title>
-    <style>
+      <style>
     button {
-      font-size: 1em; /* 少し小さく */
-      padding: 6px 12px; /* 縦横の余白を減らす */
+      font-size: 1em;
+      padding: 6px 12px;
       background-color: #4285f4;
       color: white;
       border: none;
-      border-radius: 4px; /* 角丸をちょっとだけ */
+      border-radius: 4px;
       cursor: pointer;
+      transition: transform 0.2s ease; /* ←ここ追加！ */
+    }
+    button:hover {
+      transform: scale(1.1); /* ←ホバー時に拡大 */
     }
     #count {
       margin-left: 8px;
