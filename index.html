@@ -28,46 +28,32 @@
   </style>
 </head>
 <body>
+  <button id="likeButton">👍 いいね！</button><span id="count">0</span>
 
-<button id="likeButton">👍🏼 Good!</button><span id="likeCount">0</span>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const endpoint = 'https://script.google.com/macros/s/AKfycbye6SwPza-aF3Khd0WuoANGvEtms2xvKv_WoAL9yLFiHgguC-K1LqdolK1Y8uhozqza3A/exec';
 
-<script>
-  // あなたのGASウェブアプリURLをここに！最後に / をつけない！
-  const endpoint = 'https://script.google.com/macros/s/AKfycbxCztyIAdLfCDpCF6RYsY5A3Rex2BSxQfl_uiRRtdqj9FyfjfR6CvKgmj4lk6aDMQc/exec';
+    async function fetchCount() {
+      const res = await fetch(`${endpoint}?id=${id}`);
+      const data = await res.json();
+      document.getElementById('count').textContent = data.count ?? 0;
+    }
 
-  // URLパラメータからボタンのID取得
-  const buttonId = new URLSearchParams(window.location.search).get('id');
+    async function incrementCount() {
+      const res = await fetch(`${endpoint}?id=${id}&like=1`);
+      const data = await res.json();
+      document.getElementById('count').textContent = data.count ?? 0;
+    }
 
-  if (!buttonId) {
-    alert("IDが見つかりません。URLに?id=xxxを付けてください。");
-  } else {
-    // 現在のいいね数を取得
-    fetchLikes();
-  }
+    document.getElementById('likeButton').addEventListener('click', incrementCount);
 
-  function fetchLikes() {
-    fetch(`${endpoint}?id=${buttonId}`)
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('likeCount').textContent = data.likes;
-      })
-      .catch(error => console.error('読み込みエラー:', error));
-  }
-
-// いいねボタンクリックで+1
-document.getElementById('likeButton').addEventListener('click', () => {
-  fetch(endpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id: buttonId })
-  })
-  .then(response => response.json())
-  .then(data => {
-    document.getElementById('likeCount').textContent = data.likes;
-  })
-  .catch(error => console.error('更新エラー:', error));
-});
-</script>
-
+    if (id) {
+      fetchCount();
+    } else {
+      alert('IDが指定されていません。');
+    }
+  </script>
 </body>
 </html>
