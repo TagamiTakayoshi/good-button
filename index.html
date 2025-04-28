@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>いいねボタン</title>
-      <style>
+  <style>
     button {
       font-size: 1em;
       padding: 6px 12px;
@@ -12,10 +12,10 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      transition: transform 0.2s ease; /* ←ここ追加！ */
+      transition: transform 0.2s ease;
     }
     button:hover {
-      transform: scale(1.1); /* ←ホバー時に拡大 */
+      transform: scale(1.1); /* ホバー時に拡大 */
     }
     #count {
       margin-left: 8px;
@@ -34,6 +34,7 @@
     async function fetchCount() {
       const res = await fetch(`${endpoint}?id=${id}`);
       const data = await res.json();
+      // カウントが取得できなければ、0を設定
       document.getElementById('count').textContent = data.count ?? 0;
     }
 
@@ -43,10 +44,11 @@
       document.getElementById('count').textContent = data.count ?? 0;
     }
 
+    // クリックイベント
     document.getElementById('likeButton').addEventListener('click', incrementCount);
 
     if (id) {
-      fetchCount();
+      fetchCount(); // ページ読み込み時にカウント取得
     } else {
       alert('IDが指定されていません。');
     }
